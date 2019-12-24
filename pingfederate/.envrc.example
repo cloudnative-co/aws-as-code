@@ -1,0 +1,2 @@
+export CDK_MY_VPC_CIDR="10.100.0.0/16"
+export CDK_MY_IPADDRESS="$(curl -s https://checkip.amazonaws.com/)/32"

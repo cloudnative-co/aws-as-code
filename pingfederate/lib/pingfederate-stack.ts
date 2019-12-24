@@ -9,7 +9,7 @@ export class PingfederateStack extends cdk.Stack {
 
     // VPC
     const my_vpc = new ec2.Vpc(this, 'VPC', {
-      cidr: '10.100.0.0/16',
+      cidr: process.env.CDK_MY_VPC_CIDR || '10.100.0.0/16',
       subnetConfiguration: [
         {
           name: 'public',
@@ -19,20 +19,21 @@ export class PingfederateStack extends cdk.Stack {
     });
 
     // SecurityGroup
+    const remote_access_sg = new ec2.SecurityGroup(this, "remote-access-sg", {
+      vpc: my_vpc,
+      securityGroupName: "remote-access"
+    });
+    remote_access_sg.addIngressRule(ec2.Peer.ipv4(process.env.CDK_MY_IPADDRESS || "10.100.0.0/16"), ec2.Port.tcp(22), "ssh");
+    remote_access_sg.addIngressRule(ec2.Peer.ipv4(process.env.CDK_MY_IPADDRESS || "10.100.0.0/16"), ec2.Port.tcp(3389), "RDP");
+
     const pf_sg = new ec2.SecurityGroup(this, "pingfederate-sg", {
       vpc: my_vpc,
       securityGroupName: "pingfederate"
     });
-    pf_sg.addIngressRule
 
     const adds_sg = new ec2.SecurityGroup(this, "adds-sg", {
       vpc: my_vpc,
       securityGroupName: "adds",
-    });
-
-    const remote_access_sg = new ec2.SecurityGroup(this, "remote-access-sg", {
-      vpc: my_vpc,
-      securityGroupName: "remote-access"
     });
 
     // TCP Ports for ADDS
