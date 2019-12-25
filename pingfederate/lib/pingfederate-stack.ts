@@ -1,7 +1,7 @@
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
 import iam = require('@aws-cdk/aws-iam')
-import { SubnetType, Subnet, CfnEC2Fleet, InstanceSize } from '@aws-cdk/aws-ec2';
+import { SubnetType, Subnet, CfnEC2Fleet, InstanceSize, CfnDHCPOptions, CfnVPCDHCPOptionsAssociation } from '@aws-cdk/aws-ec2';
 import { SSL_OP_NO_QUERY_MTU } from 'constants';
 import { ServicePrincipal } from '@aws-cdk/aws-iam';
 
@@ -19,6 +19,20 @@ export class PingfederateStack extends cdk.Stack {
         }
       ]
     });
+
+    // DHCP Option Set
+    const adds_ipaddress = process.env.CDK_MY_ADDS_IPADDRESS || "10.100.0.4";
+    const dhcp_opt = new CfnDHCPOptions(this, "dhcpopt", {
+      domainName: process.env.CDK_MY_DOMAIN_NAME || "example.com",
+      domainNameServers: [adds_ipaddress],
+      ntpServers: [adds_ipaddress]
+    });
+
+    const dhcp_assoc = new CfnVPCDHCPOptionsAssociation(this, "dhcpoptassoc", {
+      dhcpOptionsId: dhcp_opt.ref,
+      vpcId: my_vpc.vpcId
+    });
+    dhcp_assoc.addDependsOn(dhcp_opt);
 
     // SecurityGroup
     const remote_access_sg = new ec2.SecurityGroup(this, "remote-access-sg", {
