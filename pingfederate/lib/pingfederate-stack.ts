@@ -35,13 +35,6 @@ export class PingfederateStack extends cdk.Stack {
     dhcp_assoc.addDependsOn(dhcp_opt);
 
     // SecurityGroup
-    const remote_access_sg = new ec2.SecurityGroup(this, "remote-access-sg", {
-      vpc: my_vpc,
-      securityGroupName: "remote-access"
-    });
-    remote_access_sg.addIngressRule(ec2.Peer.ipv4(process.env.CDK_MY_IPADDRESS || "10.100.0.0/16"), ec2.Port.tcp(22), "ssh");
-    remote_access_sg.addIngressRule(ec2.Peer.ipv4(process.env.CDK_MY_IPADDRESS || "10.100.0.0/16"), ec2.Port.tcp(3389), "RDP");
-
     const pf_sg = new ec2.SecurityGroup(this, "pingfederate-sg", {
       vpc: my_vpc,
       securityGroupName: "pingfederate"
