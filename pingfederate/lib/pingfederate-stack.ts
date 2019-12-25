@@ -20,20 +20,6 @@ export class PingfederateStack extends cdk.Stack {
       ]
     });
 
-    // DHCP Option Set
-    const adds_ipaddress = process.env.CDK_MY_ADDS_IPADDRESS || "10.100.0.4";
-    const dhcp_opt = new CfnDHCPOptions(this, "dhcpopt", {
-      domainName: process.env.CDK_MY_DOMAIN_NAME || "example.com",
-      domainNameServers: [adds_ipaddress],
-      ntpServers: [adds_ipaddress]
-    });
-
-    const dhcp_assoc = new CfnVPCDHCPOptionsAssociation(this, "dhcpoptassoc", {
-      dhcpOptionsId: dhcp_opt.ref,
-      vpcId: my_vpc.vpcId
-    });
-    dhcp_assoc.addDependsOn(dhcp_opt);
-
     // SecurityGroup
     const pf_sg = new ec2.SecurityGroup(this, "pingfederate-sg", {
       vpc: my_vpc,
