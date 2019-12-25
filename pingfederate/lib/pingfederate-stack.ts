@@ -1,7 +1,9 @@
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
+import iam = require('@aws-cdk/aws-iam')
 import { SubnetType, Subnet, CfnEC2Fleet, InstanceSize } from '@aws-cdk/aws-ec2';
 import { SSL_OP_NO_QUERY_MTU } from 'constants';
+import { ServicePrincipal } from '@aws-cdk/aws-iam';
 
 export class PingfederateStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -47,12 +49,30 @@ export class PingfederateStack extends cdk.Stack {
       adds_sg.addIngressRule(pf_sg, ec2.Port.udp(v), "pingfederate");
     });
 
+    // IAM Role for SSM
+    const adds_role = new iam.Role(this, "adds-role", {
+      assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"),
+        iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
+      ]
+    });
+
+    const pf_role = new iam.Role(this, "pf-role", {
+      assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"),
+        iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
+      ]
+    });
+
     // EC2 Instance
     const adds = new ec2.Instance(this, 'adds', {
       vpc: my_vpc,
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3A, ec2.InstanceSize.LARGE),
       machineImage: new ec2.WindowsImage(ec2.WindowsVersion.WINDOWS_SERVER_2019_ENGLISH_CORE_BASE),
-      securityGroup: adds_sg
+      securityGroup: adds_sg,
+      role: adds_role
     });
 
     const pingfederate = new ec2.Instance(this, 'pingfederate', {
@@ -61,7 +81,8 @@ export class PingfederateStack extends cdk.Stack {
       machineImage: new ec2.AmazonLinuxImage({
         generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2
       }),
-      securityGroup: pf_sg
+      securityGroup: pf_sg,
+      role: pf_role
     });
   }
 }
