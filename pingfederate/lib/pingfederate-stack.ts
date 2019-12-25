@@ -1,10 +1,13 @@
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
 import iam = require('@aws-cdk/aws-iam')
+import ssm = require('@aws-cdk/aws-ssm')
+import * as fs from 'fs-extra';
 import { SubnetType, Subnet, CfnEC2Fleet, InstanceSize, CfnDHCPOptions, CfnVPCDHCPOptionsAssociation } from '@aws-cdk/aws-ec2';
 import { SSL_OP_NO_QUERY_MTU } from 'constants';
 import { ServicePrincipal } from '@aws-cdk/aws-iam';
 import { CfnOutput } from '@aws-cdk/core';
+import { CfnDocument } from '@aws-cdk/aws-ssm';
 
 export class PingfederateStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -77,6 +80,19 @@ export class PingfederateStack extends cdk.Stack {
       }),
       securityGroup: pf_sg,
       role: pf_role
+    });
+
+    // SSM Document
+    const install_adds_doc_json = require("../scripts/install-adds-forest.json");
+    const install_adds_doc = new CfnDocument(this, "install-adds-doc", {
+      documentType: "Command",
+      content: install_adds_doc_json,
+      tags: [
+        {
+          key: "Name",
+          value: "install-adds-doc"
+        }
+      ]
     });
 
     new CfnOutput(this, "addsinstanceid", {
