@@ -2,6 +2,7 @@ import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
 import iam = require('@aws-cdk/aws-iam')
 import ssm = require('@aws-cdk/aws-ssm')
+import secretsmanager = require('@aws-cdk/aws-secretsmanager')
 import * as fs from 'fs-extra';
 import { SubnetType, Subnet, CfnEC2Fleet, InstanceSize, CfnDHCPOptions, CfnVPCDHCPOptionsAssociation } from '@aws-cdk/aws-ec2';
 import { SSL_OP_NO_QUERY_MTU } from 'constants';
@@ -81,6 +82,13 @@ export class PingfederateStack extends cdk.Stack {
       securityGroup: pf_sg,
       role: pf_role
     });
+
+    // Generate DSRM Password
+    const secret = new secretsmanager.Secret(this, "DSRMPassword", {
+      secretName: "DSRM-Password",
+      description: "Directory Service Restore Mode Password",
+      generateSecretString: { passwordLength: 32 }
+    })
 
     // SSM Document
     const install_adds_doc_json = require("../scripts/install-adds-forest.json");
