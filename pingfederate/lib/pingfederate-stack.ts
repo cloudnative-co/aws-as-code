@@ -6,7 +6,7 @@ import secretsmanager = require('@aws-cdk/aws-secretsmanager')
 import * as fs from 'fs-extra';
 import { SubnetType, Subnet, CfnEC2Fleet, InstanceSize, CfnDHCPOptions, CfnVPCDHCPOptionsAssociation } from '@aws-cdk/aws-ec2';
 import { SSL_OP_NO_QUERY_MTU } from 'constants';
-import { ServicePrincipal } from '@aws-cdk/aws-iam';
+import { ServicePrincipal, Effect } from '@aws-cdk/aws-iam';
 import { CfnOutput } from '@aws-cdk/core';
 import { CfnDocument } from '@aws-cdk/aws-ssm';
 
@@ -47,7 +47,7 @@ export class PingfederateStack extends cdk.Stack {
       adds_sg.addIngressRule(pf_sg, ec2.Port.udp(v), "pingfederate");
     });
 
-    // IAM Role for SSM
+    // IAM Role
     const adds_role = new iam.Role(this, "adds-role", {
       assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
@@ -63,6 +63,32 @@ export class PingfederateStack extends cdk.Stack {
         iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
       ]
     });
+
+    // Policy for Secrets Manager
+    const secrets_policy_stat1 = new iam.PolicyStatement({
+      effect: Effect.ALLOW
+    });
+    secrets_policy_stat1.addActions(
+      "secretmanager:GetResourcePolicy",
+      "secretmanager:GetSecretValue",
+      "secretmanager:DescribeSecret",
+      "secretmanager:ListSecretVersionsIds"
+    );
+    secrets_policy_stat1.addResources("arn:aws:secretsmanager:*:*:secret:*");
+
+    const secrets_policy_stat2 = new iam.PolicyStatement({
+      effect: Effect.ALLOW
+    });
+    secrets_policy_stat2.addActions("secretsmanager:ListSecrets");
+    secrets_policy_stat2.addAllResources();
+
+    const secrets_policy = new iam.ManagedPolicy(this, "read-secrets",{
+      description: "Allow Read Secrets from Secrets Manager",
+      roles: [adds_role, pf_role],
+      statements: [secrets_policy_stat1, secrets_policy_stat2]
+    });
+    secrets_policy.attachToRole(adds_role);
+    secrets_policy.attachToRole(pf_role);
 
     // EC2 Instance
     const adds = new ec2.Instance(this, 'adds', {
