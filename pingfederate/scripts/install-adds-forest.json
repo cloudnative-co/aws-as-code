@@ -19,10 +19,6 @@
             "type": "String",
             "default": "WinThreshold",
             "description": "Accept Values: Win2008, Win2008R2, Win2012, Win2012R2, WinThreshold, Default"
-        },
-        "DSRMPassword": {
-            "type": "String",
-            "description": "Password for Directory Services Restore Mode"
         }
     },
     "mainSteps": [
@@ -33,8 +29,9 @@
                 "runCommand": [
                     "install-windowsfeature AD-Domain-Services",
                     "Import-Module ADDSDeployment",
-                    "$password = ConvertTo-SecureString \"{{ DSRMPassword }}\" -AsPlainText -Force",
-                    "Install-ADDSForest -DomainName {{ domainName }} -DomainNetbiosName {{ domainNetBiosName }} -ForestMode {{ forestMode }} -DomainMode {{ domainMode }} -SafeModeAdministratorPassword $password -DatabasePath \"C:\\Windows\\NTDS\" -LogPath \"C:\\Windows\\NTDS\" -SysvolPath \"C:\\Windows\\SYSVOL\" -InstallDns:$true -CreateDnsDelegation:$false -NoRebootOnCompletion:$false -Force:$true "
+                    "$password = Get-SECSecretValue -SecretId DSRM-Password | Select-Object SecretString",
+                    "$encrypted_password = ConvertTo-SecureString $password -AsPlainText -Force",
+                    "Install-ADDSForest -DomainName {{ domainName }} -DomainNetbiosName {{ domainNetBiosName }} -ForestMode {{ forestMode }} -DomainMode {{ domainMode }} -SafeModeAdministratorPassword $encrypted_password -DatabasePath \"C:\\Windows\\NTDS\" -LogPath \"C:\\Windows\\NTDS\" -SysvolPath \"C:\\Windows\\SYSVOL\" -InstallDns:$true -CreateDnsDelegation:$false -NoRebootOnCompletion:$false -Force:$true "
                 ]
             }
         }

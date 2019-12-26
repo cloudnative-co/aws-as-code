@@ -69,10 +69,10 @@ export class PingfederateStack extends cdk.Stack {
       effect: Effect.ALLOW
     });
     secrets_policy_stat1.addActions(
-      "secretmanager:GetResourcePolicy",
-      "secretmanager:GetSecretValue",
-      "secretmanager:DescribeSecret",
-      "secretmanager:ListSecretVersionsIds"
+      "secretsmanager:GetResourcePolicy",
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret",
+      "secretsmanager:ListSecretVersionIds"
     );
     secrets_policy_stat1.addResources("arn:aws:secretsmanager:*:*:secret:*");
 
@@ -82,7 +82,7 @@ export class PingfederateStack extends cdk.Stack {
     secrets_policy_stat2.addActions("secretsmanager:ListSecrets");
     secrets_policy_stat2.addAllResources();
 
-    const secrets_policy = new iam.ManagedPolicy(this, "read-secrets",{
+    const secrets_policy = new iam.ManagedPolicy(this, "read-secrets", {
       description: "Allow Read Secrets from Secrets Manager",
       roles: [adds_role, pf_role],
       statements: [secrets_policy_stat1, secrets_policy_stat2]
