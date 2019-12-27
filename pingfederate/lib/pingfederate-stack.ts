@@ -47,6 +47,13 @@ export class PingfederateStack extends cdk.Stack {
       adds_sg.addIngressRule(pf_sg, ec2.Port.udp(v), "pingfederate");
     });
 
+    const remote_access_sg = new ec2.SecurityGroup(this, "remote-access-sg", {
+      vpc: my_vpc,
+      securityGroupName: "remote-access"
+    });
+    remote_access_sg.addIngressRule(ec2.Peer.ipv4(process.env.CDK_MY_IPADDRESS || "10.100.0.0/16"), ec2.Port.tcp(22), "ssh");
+    remote_access_sg.addIngressRule(ec2.Peer.ipv4(process.env.CDK_MY_IPADDRESS || "10.100.0.0/16"), ec2.Port.tcp(3389), "RDP");
+
     // IAM Role
     const adds_role = new iam.Role(this, "adds-role", {
       assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
@@ -98,6 +105,7 @@ export class PingfederateStack extends cdk.Stack {
       securityGroup: adds_sg,
       role: adds_role
     });
+    adds.addSecurityGroup(remote_access_sg);
 
     const pingfederate = new ec2.Instance(this, 'pingfederate', {
       vpc: my_vpc,
@@ -108,6 +116,7 @@ export class PingfederateStack extends cdk.Stack {
       securityGroup: pf_sg,
       role: pf_role
     });
+    pingfederate.addSecurityGroup(remote_access_sg);
 
     // Generate DSRM Password
     const secret = new secretsmanager.Secret(this, "DSRMPassword", {
