@@ -7,3 +7,4 @@ ADDS_INSTALL_DOCUMENT_NAME=`aws ssm list-documents --query 'DocumentIdentifiers[
 echo $ADDS_INSTALL_DOCUMENT_NAME
 
 RESULT=`aws ssm send-command --instance-ids "${ADDS_INSTANCE_ID}" --document-name "${ADDS_INSTALL_DOCUMENT_NAME}" --parameters "domainName=${CDK_MY_DOMAIN_NAME},domainNetBiosName=${CDK_MY_DOMAIN_NETBIOS_NAME}" --cloud-watch-output-config '{"CloudWatchOutputEnabled":true}'`
+echo $RESULT
