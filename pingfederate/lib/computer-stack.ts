@@ -1,7 +1,8 @@
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
-import { IVpc, ISecurityGroup } from '@aws-cdk/aws-ec2';
+import { IVpc, ISecurityGroup, IInstance } from '@aws-cdk/aws-ec2';
 import { IRole } from '@aws-cdk/aws-iam';
+import { CfnOutput } from '@aws-cdk/core'
 
 interface ComputerStackProps extends cdk.StackProps {
   vpc: IVpc,
@@ -13,6 +14,9 @@ interface ComputerStackProps extends cdk.StackProps {
 };
 
 export class ComputerStack extends cdk.Stack {
+  public readonly addsInstance: IInstance;
+  public readonly pfInstance: IInstance;
+
   constructor(scope: cdk.Construct, id: string, props: ComputerStackProps) {
     super(scope, id, props);
 
@@ -36,5 +40,15 @@ export class ComputerStack extends cdk.Stack {
       role: props.pfRole
     });
     pingfederate.addSecurityGroup(props.remoteAccessSg);
+
+    new CfnOutput(this, "addsinstanceid", {
+      value: adds.instanceId,
+      description: "ADDS Instance ID"
+    });
+
+    new CfnOutput(this, "pfinstanceid", {
+      value: pingfederate.instanceId,
+      description: "PingFederate Instance ID"
+    });
   }
 }

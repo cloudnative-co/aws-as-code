@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ADDS_INSTANCE_ID=`aws cloudformation describe-stacks --stack-name PingfederateStack --query 'Stacks[0].Outputs[?OutputKey==\`addsinstanceid\`].OutputValue|[0]' --output text`
+ADDS_INSTANCE_ID=`aws cloudformation describe-stacks --stack-name ComputerStack --query 'Stacks[0].Outputs[?OutputKey==\`addsinstanceid\`].OutputValue|[0]' --output text`
 echo $ADDS_INSTANCE_ID
 
 ADDS_INSTALL_DOCUMENT_NAME=`aws ssm list-documents --query 'DocumentIdentifiers[?Tags[?Key==\`Name\`].Value|[0]==\`install-adds-doc\`][]|[0].Name'|tr -d '"'`
