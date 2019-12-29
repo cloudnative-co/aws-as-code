@@ -27,7 +27,7 @@
             "name": "runPowerShellScript",
             "inputs": {
                 "runCommand": [
-                    "$password = Get-SECSecretValue -SecretId DSRM-Password | Select-Object SecretString",
+                    "$password = Get-SECSecretValue -SecretId AdminPassword | Select-Object SecretString",
                     "$encrypted_password = ConvertTo-SecureString $password -AsPlainText -Force",
                     "Set-LocalUser -Name Administrator -Password $encrypted_password -PasswordNeverExpires:$true",
                     "install-windowsfeature AD-Domain-Services",
