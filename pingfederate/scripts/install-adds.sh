@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Install and configuration Active Directory Domain Service for ${CDK_MY_DOMAIN_NAME} (${CDK_MY_DOMAIN_NETBIOS_NAME})"
+
 ADDS_INSTANCE_ID=`aws cloudformation describe-stacks --stack-name ComputerStack --query 'Stacks[0].Outputs[?OutputKey==\`addsinstanceid\`].OutputValue|[0]' --output text`
 echo $ADDS_INSTANCE_ID
 
