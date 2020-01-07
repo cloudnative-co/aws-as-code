@@ -10,7 +10,7 @@ export class ManagementStack extends cdk.Stack {
     // SSM Document
     const install_adds_doc_json = require("../scripts/install-adds-forest.json");
     this.installAddsDocument = new CfnDocument(this, "install-adds-doc", {
-      documentType: "Command",
+      documentType: "Automation",
       content: install_adds_doc_json,
       tags: [
         {

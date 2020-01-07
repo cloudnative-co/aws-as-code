@@ -1,5 +1,5 @@
 {
-    "schemaVersion": "2.2",
+    "schemaVersion": "0.3",
     "description": "Install-ADDSForest",
     "parameters": {
         "domainName": {
@@ -23,19 +23,60 @@
     },
     "mainSteps": [
         {
-            "action": "aws:runPowerShellScript",
-            "name": "runPowerShellScript",
+            "action": "aws:runCommand",
+            "name": "installwindowsfeature",
+            "nextStep": "setadminpassword",
             "inputs": {
-                "runCommand": [
-                    "$password = Get-SECSecretValue -SecretId AdminPassword | Select-Object SecretString",
-                    "$encrypted_password = ConvertTo-SecureString $password -AsPlainText -Force",
-                    "Set-LocalUser -Name Administrator -Password $encrypted_password -PasswordNeverExpires:$true",
-                    "install-windowsfeature AD-Domain-Services",
-                    "Import-Module ADDSDeployment",
-                    "Install-ADDSForest -DomainName {{ domainName }} -DomainNetbiosName {{ domainNetBiosName }} -ForestMode {{ forestMode }} -DomainMode {{ domainMode }} -SafeModeAdministratorPassword $encrypted_password -DatabasePath \"C:\\Windows\\NTDS\" -LogPath \"C:\\Windows\\NTDS\" -SysvolPath \"C:\\Windows\\SYSVOL\" -InstallDns:$true -CreateDnsDelegation:$false -NoRebootOnCompletion:$false -Force:$true ",
-                    "New-ADUser ssm-user",
-                    "Add-ADPrincipalGroupMembership ssm-user -memberOf \"Domain Admins\""
-                ]
+                "DocumentName": "AWS-RunPowerShellScript",
+                "Parameters": {
+                    "commands": [
+                        "install-windowsfeature AD-Domain-Services"
+                    ]
+                }
+            }
+        },
+        {
+            "action": "aws:runCommand",
+            "name": "setadminpassword",
+            "nextStep": "installaddsforest",
+            "inputs": {
+                "DocumentName": "AWS-RunPowerShellScript",
+                "Parameters": {
+                    "commands": [
+                        "$password = Get-SECSecretValue -SecretId AdminPassword | Select-Object SecretString",
+                        "$encrypted_password = ConvertTo-SecureString $password -AsPlainText -Force",
+                        "Set-LocalUser -Name Administrator -Password $encrypted_password -PasswordNeverExpires:$true"
+                    ]
+                }
+            }
+        },
+        {
+            "action": "aws:runCommand",
+            "name": "installaddsforest",
+            "nextStep": "addssmusertodomainadmin",
+            "inputs": {
+                "DocumentName": "AWS-RunPowerShellScript",
+                "Parameters": {
+                    "commands": [
+                        "$password = Get-SECSecretValue -SecretId AdminPassword | Select-Object SecretString",
+                        "$encrypted_password = ConvertTo-SecureString $password -AsPlainText -Force",
+                        "Import-Module ADDSDeployment",
+                        "Install-ADDSForest -DomainName {{ domainName }} -DomainNetbiosName {{ domainNetBiosName }} -ForestMode {{ forestMode }} -DomainMode {{ domainMode }} -SafeModeAdministratorPassword $encrypted_password -DatabasePath \"C:\\Windows\\NTDS\" -LogPath \"C:\\Windows\\NTDS\" -SysvolPath \"C:\\Windows\\SYSVOL\" -InstallDns:$true -CreateDnsDelegation:$false -NoRebootOnCompletion:$false -Force:$true"
+                    ]
+                }
+            }
+        },
+        {
+            "action": "aws:runCommand",
+            "name": "addssmusertodomainadmin",
+            "inputs": {
+                "DocumentName": "AWS-RunPowerShellScript",
+                "Parameters": {
+                    "commands": [
+                        "New-ADUser ssm-user",
+                        "Add-ADPrincipalGroupMembership ssm-user -memberOf \"Domain Admins\""
+                    ]
+                }
             }
         }
     ]

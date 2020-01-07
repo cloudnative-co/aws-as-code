@@ -4,8 +4,8 @@ import { Vpc, SecurityGroup } from '@aws-cdk/aws-ec2';
 
 export class NetworkStack extends cdk.Stack {
   public readonly vpc: Vpc;
-  public readonly addsSg: SecurityGroup; 
-  public readonly pfSg: SecurityGroup; 
+  public readonly addsSg: SecurityGroup;
+  public readonly pfSg: SecurityGroup;
   public readonly remoteAccessSg: SecurityGroup;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
