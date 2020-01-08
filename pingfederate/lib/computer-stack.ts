@@ -1,6 +1,6 @@
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
-import { IVpc, ISecurityGroup, IInstance } from '@aws-cdk/aws-ec2';
+import { IVpc, ISecurityGroup, IInstance, UserData } from '@aws-cdk/aws-ec2';
 import { IRole } from '@aws-cdk/aws-iam';
 import { CfnOutput } from '@aws-cdk/core'
 
@@ -30,6 +30,11 @@ export class ComputerStack extends cdk.Stack {
     });
     adds.addSecurityGroup(props.remoteAccessSg);
 
+    const userData = UserData.forLinux();
+    userData.addCommands(
+      'echo ECS_CLUSTER=pingfederate >> /etc/ecs/ecs.config'
+    )
+
     const pingfederate = new ec2.Instance(this, 'pingfederate', {
       vpc: props.vpc,
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3A, ec2.InstanceSize.MEDIUM),
@@ -37,7 +42,8 @@ export class ComputerStack extends cdk.Stack {
         generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2
       }),
       securityGroup: props.pfSg,
-      role: props.pfRole
+      role: props.pfRole,
+      userData: userData
     });
     pingfederate.addSecurityGroup(props.remoteAccessSg);
 

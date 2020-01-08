@@ -13,7 +13,6 @@ new SecretStack(app, 'SecretStack');
 new ManagementStack(app, 'ManagementStack');
 const identityStack = new IdentityStack(app, 'IdentityStack');
 const networkStack = new NetworkStack(app, 'NetworkStack');
-const containerStack = new ContainerStack(app, 'ContainerStack');
 new ComputerStack(app, 'ComputerStack', {
     vpc: networkStack.vpc,
     addsSg: networkStack.addsSg,
@@ -21,4 +20,7 @@ new ComputerStack(app, 'ComputerStack', {
     remoteAccessSg: networkStack.remoteAccessSg,
     addsRole: identityStack.addsRole,
     pfRole: identityStack.pfRole
+});
+new ContainerStack(app, 'ContainerStack', {
+    vpc: networkStack.vpc,
 });
