@@ -6,12 +6,14 @@ import { ComputerStack } from '../lib/computer-stack';
 import { IdentityStack } from '../lib/identity-stack';
 import { ManagementStack } from '../lib/management-stack';
 import { SecretStack } from '../lib/secrets-stack';
+import { ContainerStack } from '../lib/container-stack';
 
 const app = new cdk.App();
 new SecretStack(app, 'SecretStack');
 new ManagementStack(app, 'ManagementStack');
 const identityStack = new IdentityStack(app, 'IdentityStack');
 const networkStack = new NetworkStack(app, 'NetworkStack');
+const containerStack = new ContainerStack(app, 'ContainerStack');
 new ComputerStack(app, 'ComputerStack', {
     vpc: networkStack.vpc,
     addsSg: networkStack.addsSg,
