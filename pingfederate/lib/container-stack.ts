@@ -15,12 +15,22 @@ export class ContainerStack extends cdk.Stack {
             clusterName: "PingFederate",
             vpc: props.vpc
         })
+        cluster.addCapacity('spot' {
+            maxCapacity: 1,
+            minCapacity: 1,
+            desiredCapacity: 1,
+            instanceType: new ec2.InstanceType('')
+        })
 
         const taskDefinition = new ecs.Ec2TaskDefinition(this, 'PingFederateTask')
         taskDefinition.addContainer('PFContainer', {
-            image: ecs.ContainerImage.fromRegistry("pingidentity/pingfederate:9.3.3", {
+            image: ecs.ContainerImage.fromRegistry("pingidentity/pingfederate:9.3.3"),
+            memoryLimitMiB: 512
+        })
 
-            })
+        const ecsService = new ecs.Ec2Service(this, 'Service', {
+            cluster,
+            taskDefinition
         })
     }
 }
