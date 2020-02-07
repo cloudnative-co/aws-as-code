@@ -1,0 +1,4 @@
+export CDK_MY_CERT_ARN="arn:aws:acm:<region>:<awsaccountid>:certificate/<certid>"
+export CDK_MY_CLIENT_CIDR_BLOCK="10.1.0.0/24"
+export CDK_MY_SUBNET_ID="subnet-00000000000000000"
+export CDK_MY_TARGET_CIDR="10.0.0.0/16"
