@@ -12,7 +12,7 @@ export class ClientvpnStack extends cdk.Stack {
         {
           type: "certificate-authentication",
           mutualAuthentication: {
-            clientRootCertificateChainArn: process.env.CDK_MY_CERT_ARN || ""
+            clientRootCertificateChainArn: process.env.CDK_MY_CLIENT_CERT_ARN || ""
           }
         }
       ],
@@ -20,7 +20,7 @@ export class ClientvpnStack extends cdk.Stack {
       connectionLogOptions: {
         enabled: false,
       },
-      serverCertificateArn: process.env.CDK_MY_CERT_ARN || ""
+      serverCertificateArn: process.env.CDK_MY_SERVER_CERT_ARN || ""
     });
 
     const certauthassoc = new ec2.CfnClientVpnTargetNetworkAssociation(this, "certauthassoc", {
