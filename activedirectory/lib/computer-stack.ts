@@ -12,6 +12,7 @@ interface ComputerStackProps extends cdk.StackProps {
 
 export class ComputerStack extends cdk.Stack {
   public readonly addsInstance: IInstance;
+  public readonly addsPrivateIpAddress: CfnOutput;
 
   constructor(scope: cdk.Construct, id: string, props: ComputerStackProps) {
     super(scope, id, props);
@@ -28,6 +29,11 @@ export class ComputerStack extends cdk.Stack {
     new CfnOutput(this, "addsinstanceid", {
       value: adds.instanceId,
       description: "ADDS Instance ID"
+    });
+
+    this.addsPrivateIpAddress = new CfnOutput(this, "addsprivateipaddress", {
+      value: adds.instancePrivateIp,
+      description: "ADDS Instance Private IP Address"
     });
   }
 }
