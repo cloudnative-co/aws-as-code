@@ -1,0 +1,16 @@
+{
+    "schemaVersion": "2.2",
+    "description": "Setup SSM User",
+    "mainSteps": [
+        {
+            "action": "aws:runPowerShellScript",
+            "name": "runPowerShellScript",
+            "inputs": {
+                "runCommand": [
+                    "New-ADUser ssm-user",
+                    "Add-ADPrincipalGroupMembership ssm-user -memberOf \"Domain Admins\""
+                ]
+            }
+        }
+    ]
+}

@@ -32,9 +32,7 @@
                     "Set-LocalUser -Name Administrator -Password $encrypted_password -PasswordNeverExpires:$true",
                     "install-windowsfeature AD-Domain-Services",
                     "Import-Module ADDSDeployment",
-                    "Install-ADDSForest -DomainName {{ domainName }} -DomainNetbiosName {{ domainNetBiosName }} -ForestMode {{ forestMode }} -DomainMode {{ domainMode }} -SafeModeAdministratorPassword $encrypted_password -DatabasePath \"C:\\Windows\\NTDS\" -LogPath \"C:\\Windows\\NTDS\" -SysvolPath \"C:\\Windows\\SYSVOL\" -InstallDns:$true -CreateDnsDelegation:$false -NoRebootOnCompletion:$false -Force:$true ",
-                    "New-ADUser ssm-user",
-                    "Add-ADPrincipalGroupMembership ssm-user -memberOf \"Domain Admins\""
+                    "Install-ADDSForest -DomainName {{ domainName }} -DomainNetbiosName {{ domainNetBiosName }} -ForestMode {{ forestMode }} -DomainMode {{ domainMode }} -SafeModeAdministratorPassword $encrypted_password -DatabasePath \"C:\\Windows\\NTDS\" -LogPath \"C:\\Windows\\NTDS\" -SysvolPath \"C:\\Windows\\SYSVOL\" -InstallDns:$true -CreateDnsDelegation:$false -NoRebootOnCompletion:$false -Force:$true "
                 ]
             }
         }
