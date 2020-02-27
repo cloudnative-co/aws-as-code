@@ -14,7 +14,7 @@ export class DHCPOptionSetStack extends cdk.Stack {
     super(scope, id, props);
 
     // const adds_private_ip_address = process.env.CDK_MY_ADDS_PRIVATE_IP_ADDRESS || "10.100.0.4"
-    const adds_private_ip_address = props.addsPrivateIpAddress || "10.100.0.4";
+    const adds_private_ip_address = props.addsPrivateIpAddress;
     const cfn_dhcp_option_set = new CfnDHCPOptions(this, "adds-dhcp-options", {
       domainName: process.env.CDK_MY_DOMAIN_NAME,
       domainNameServers: [adds_private_ip_address],
