@@ -33,3 +33,4 @@ Windows Serverインスタンスを起動して、Active Directory Domain Servic
 
 * データからユーザーを自動生成するScriptの追加
 * PowerShell ScriptのDSC化
+* Run Commandを実行するスクリプトの出力の調整
