@@ -20,7 +20,7 @@ export class ComputerStack extends cdk.Stack {
     // EC2 Instance
     const adds = new ec2.Instance(this, 'adds', {
       vpc: props.vpc,
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3A, ec2.InstanceSize.LARGE),
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3A, ec2.InstanceSize.MICRO),
       machineImage: new ec2.WindowsImage(ec2.WindowsVersion.WINDOWS_SERVER_2019_ENGLISH_CORE_BASE),
       securityGroup: props.addsSg,
       role: props.addsRole
