@@ -20,5 +20,6 @@ const computerStack = new ComputerStack(app, 'AddsComputerStack', {
 });
 new DHCPOptionSetStack(app, 'AddsDHCPOptionSetStack', {
     vpc: networkStack.vpc,
-    addsPrivateIpAddress: computerStack.addsPrivateIpAddress.toString()
+    addsPrivateIpAddress: computerStack.addsPrivateIpAddress
 });
+

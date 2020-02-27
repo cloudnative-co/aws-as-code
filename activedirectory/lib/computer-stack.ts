@@ -32,6 +32,7 @@ export class ComputerStack extends cdk.Stack {
     });
 
     this.addsPrivateIpAddress = new CfnOutput(this, "addsprivateipaddress", {
+      exportName: "addsprivateipaddress",
       value: adds.instancePrivateIp,
       description: "ADDS Instance Private IP Address"
     });

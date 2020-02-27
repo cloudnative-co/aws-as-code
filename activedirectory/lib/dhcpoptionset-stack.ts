@@ -1,10 +1,11 @@
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
 import { Vpc, CfnDHCPOptions, CfnVPCDHCPOptionsAssociation } from '@aws-cdk/aws-ec2';
+import { CfnOutput, Fn } from '@aws-cdk/core';
 
 interface DHCPOptionSetStackProps extends cdk.StackProps {
-  vpc: ec2.IVpc
-  addsPrivateIpAddress: string
+  vpc: ec2.IVpc,
+  addsPrivateIpAddress: CfnOutput
 };
 
 export class DHCPOptionSetStack extends cdk.Stack {
@@ -14,7 +15,7 @@ export class DHCPOptionSetStack extends cdk.Stack {
     super(scope, id, props);
 
     // const adds_private_ip_address = process.env.CDK_MY_ADDS_PRIVATE_IP_ADDRESS || "10.100.0.4"
-    const adds_private_ip_address = props.addsPrivateIpAddress;
+    const adds_private_ip_address = Fn.importValue(props.addsPrivateIpAddress.toString().split("/")[1]);
     const cfn_dhcp_option_set = new CfnDHCPOptions(this, "adds-dhcp-options", {
       domainName: process.env.CDK_MY_DOMAIN_NAME,
       domainNameServers: [adds_private_ip_address],
