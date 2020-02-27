@@ -28,3 +28,8 @@ Windows Serverインスタンスを起動して、Active Directory Domain Servic
   * その場合は、一度 default のDHCP Option Setにアタッチし直すと、AmazonのDNSが利用されるようになる。
 * 利用しているAMIは、Windows Server 2019 Core (English)なので、必要に応じて変更すること。
 * SSM経由で管理する前提なので、KeyPairは未設定なので、必要な場合は指定すること。
+
+## TODO
+
+* データからユーザーを自動生成するScriptの追加
+* PowerShell ScriptのDSC化
