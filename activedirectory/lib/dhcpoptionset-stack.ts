@@ -1,10 +1,9 @@
 import cdk = require('@aws-cdk/core');
-import ec2 = require('@aws-cdk/aws-ec2')
-import { Vpc, CfnDHCPOptions, CfnVPCDHCPOptionsAssociation } from '@aws-cdk/aws-ec2';
+import { IVpc, CfnDHCPOptions, CfnVPCDHCPOptionsAssociation } from '@aws-cdk/aws-ec2';
 import { CfnOutput, Fn } from '@aws-cdk/core';
 
 interface DhcpStackProps extends cdk.StackProps {
-  vpc: ec2.IVpc,
+  vpc: IVpc,
   addsPrivateIpAddress: CfnOutput
 };
 

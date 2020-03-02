@@ -1,6 +1,6 @@
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
-import { IVpc, ISecurityGroup, IInstance } from '@aws-cdk/aws-ec2';
+import { IVpc, IInstance } from '@aws-cdk/aws-ec2';
 import { IRole } from '@aws-cdk/aws-iam';
 import { CfnOutput, Fn } from '@aws-cdk/core'
 

@@ -1,6 +1,6 @@
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
-import { Vpc, SecurityGroup, ISecurityGroup } from '@aws-cdk/aws-ec2';
+import { Vpc } from '@aws-cdk/aws-ec2';
 import { CfnOutput } from '@aws-cdk/core';
 
 export class NetworkStack extends cdk.Stack {
