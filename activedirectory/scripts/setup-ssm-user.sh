@@ -7,4 +7,9 @@ SETUP_SSM_USER_DOCUMENT_NAME=`aws ssm list-documents --query 'DocumentIdentifier
 echo $SETUP_SSM_USER_DOCUMENT_NAME
 
 RESULT=`aws ssm send-command --instance-ids "${ADDS_INSTANCE_ID}" --document-name "${SETUP_SSM_USER_DOCUMENT_NAME}" --cloud-watch-output-config '{"CloudWatchOutputEnabled":true}'`
-echo $RESULT
+
+if [ -x `which jq` ]; then
+  echo $RESULT | jq ". | { CommandId: .Command.CommandId, InstanceIds: .Command.InstanceIds }"
+else
+  echo $RESULT
+fi
