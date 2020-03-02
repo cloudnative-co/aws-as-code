@@ -6,7 +6,7 @@ import { ComputerStack } from '../lib/computer-stack';
 import { IdentityStack } from '../lib/identity-stack';
 import { ManagementStack } from '../lib/management-stack';
 import { SecretStack } from '../lib/secrets-stack';
-import { DHCPOptionSetStack } from '../lib/dhcpoptionset-stack';
+import { DhcpStack } from '../lib/dhcpoptionset-stack';
 
 const app = new cdk.App();
 new SecretStack(app, 'AddsSecretStack');
@@ -20,7 +20,7 @@ const computerStack = new ComputerStack(app, 'AddsComputerStack', {
     internalSgId: networkStack.internalSgId,
     remoteAccessSgId: networkStack.remoteAccessSgId,
 });
-new DHCPOptionSetStack(app, 'AddsDHCPOptionSetStack', {
+new DhcpStack(app, 'AddsDhcpStack', {
     vpc: networkStack.vpc,
     addsPrivateIpAddress: computerStack.addsPrivateIpAddress
 });

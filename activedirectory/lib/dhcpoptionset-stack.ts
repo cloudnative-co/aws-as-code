@@ -3,15 +3,15 @@ import ec2 = require('@aws-cdk/aws-ec2')
 import { Vpc, CfnDHCPOptions, CfnVPCDHCPOptionsAssociation } from '@aws-cdk/aws-ec2';
 import { CfnOutput, Fn } from '@aws-cdk/core';
 
-interface DHCPOptionSetStackProps extends cdk.StackProps {
+interface DhcpStackProps extends cdk.StackProps {
   vpc: ec2.IVpc,
   addsPrivateIpAddress: CfnOutput
 };
 
-export class DHCPOptionSetStack extends cdk.Stack {
+export class DhcpStack extends cdk.Stack {
   public readonly dhcpOptionSet: CfnDHCPOptions;
 
-  constructor(scope: cdk.Construct, id: string, props: DHCPOptionSetStackProps) {
+  constructor(scope: cdk.Construct, id: string, props: DhcpStackProps) {
     super(scope, id, props);
 
     // const adds_private_ip_address = process.env.CDK_MY_ADDS_PRIVATE_IP_ADDRESS || "10.100.0.4"
