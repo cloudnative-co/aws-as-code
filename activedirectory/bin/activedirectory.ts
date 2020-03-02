@@ -15,8 +15,10 @@ const identityStack = new IdentityStack(app, 'AddsIdentityStack');
 const networkStack = new NetworkStack(app, 'AddsNetworkStack');
 const computerStack = new ComputerStack(app, 'AddsComputerStack', {
     vpc: networkStack.vpc,
-    addsSg: networkStack.addsSg,
     addsRole: identityStack.addsRole,
+    addsSgId: networkStack.addsSgId,
+    internalSgId: networkStack.internalSgId,
+    remoteAccessSgId: networkStack.remoteAccessSgId,
 });
 new DHCPOptionSetStack(app, 'AddsDHCPOptionSetStack', {
     vpc: networkStack.vpc,
