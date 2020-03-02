@@ -3,7 +3,7 @@
   "context": {
     "gui": {
       "instanceClass": "t3a",
-      "instanceSize": "medium",
+      "instanceSize": "large",
       "windowsAmiVersion": "Windows_Server-2019-English-Full-Base"
     },
     "cli": {
