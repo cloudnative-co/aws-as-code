@@ -7,9 +7,6 @@ import { CfnOutput, Fn } from '@aws-cdk/core'
 interface ComputerStackProps extends cdk.StackProps {
   vpc: IVpc,
   addsRole: IRole,
-  addsSgId: CfnOutput,
-  internalSgId: CfnOutput,
-  remoteAccessSgId: CfnOutput,
 };
 
 export class ComputerStack extends cdk.Stack {
@@ -20,9 +17,9 @@ export class ComputerStack extends cdk.Stack {
     super(scope, id, props);
 
     // Security Groups
-    const addsSg = ec2.SecurityGroup.fromSecurityGroupId(this, "adds-sg", Fn.importValue(props.addsSgId.toString().split("/")[1]));
-    const internalSg = ec2.SecurityGroup.fromSecurityGroupId(this, "internal-sg", Fn.importValue(props.internalSgId.toString().split("/")[1]));
-    const remoteAccessSg = ec2.SecurityGroup.fromSecurityGroupId(this, "remote-access-sg", Fn.importValue(props.remoteAccessSgId.toString().split("/")[1]));
+    const addsSg = ec2.SecurityGroup.fromSecurityGroupId(this, "adds-sg", Fn.importValue("adds-sg-id"));
+    const internalSg = ec2.SecurityGroup.fromSecurityGroupId(this, "internal-sg", Fn.importValue("internal-sg-id"));
+    const remoteAccessSg = ec2.SecurityGroup.fromSecurityGroupId(this, "remote-access-sg", Fn.importValue("remote-access-sg-id"));
 
     // EC2 Instance Parameters
     const uiType = process.env.CDK_MY_UI_TYPE || "cli";
