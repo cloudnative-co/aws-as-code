@@ -17,11 +17,15 @@ export class ComputerStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: ComputerStackProps) {
     super(scope, id, props);
 
+    // EC2 Instance Parameters
+    const uiType = process.env.CDK_MY_UI_TYPE || "cli";
+    const instanceParams = this.node.tryGetContext(uiType);
+
     // EC2 Instance
     const adds = new ec2.Instance(this, 'adds', {
       vpc: props.vpc,
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3A, ec2.InstanceSize.MICRO),
-      machineImage: new ec2.WindowsImage(ec2.WindowsVersion.WINDOWS_SERVER_2019_ENGLISH_CORE_BASE),
+      instanceType: ec2.InstanceType.of(instanceParams.instanceClass, instanceParams.instanceSize),
+      machineImage: new ec2.WindowsImage(instanceParams.windowsAmiVersion),
       securityGroup: props.addsSg,
       role: props.addsRole
     });
