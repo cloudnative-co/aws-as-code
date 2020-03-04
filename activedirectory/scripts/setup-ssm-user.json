@@ -1,6 +1,12 @@
 {
     "schemaVersion": "2.2",
     "description": "Setup SSM User for Active Directory",
+    "parameters": {
+        "domainNetBiosName": {
+            "type": "String",
+            "description": "Domain NetBIOS Name for ADDS"
+        }
+    },
     "mainSteps": [
         {
             "action": "aws:runPowerShellScript",
@@ -14,9 +20,9 @@
                 "runCommand": [
                     "$password = Get-SECSecretValue -SecretId AdminPassword | Select-Object SecretString",
                     "$encrypted_password = ConvertTo-SecureString $password -AsPlainText -Force",
-                    "Set-ADAccountPassword -Name Administrator -Password $encrypted_password",
                     "New-ADUser -Name ssm-user -Enabled $true",
-                    "Add-ADPrincipalGroupMembership ssm-user -memberOf \"Domain Admins\""
+                    "Add-ADPrincipalGroupMembership ssm-user -memberOf \"Domain Admins\"",
+                    "Set-ADAccountPassword -Name {{ domainNetBiosName }}\\Administrator -NewPassword $encrypted_password -Reset"
                 ]
             }
         }
