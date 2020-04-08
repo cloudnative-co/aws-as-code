@@ -20,9 +20,9 @@
                 "runCommand": [
                     "$password = Get-SECSecretValue -SecretId AdminPassword | Select-Object SecretString",
                     "$encrypted_password = ConvertTo-SecureString $password -AsPlainText -Force",
-                    "New-ADUser -Name ssm-user -Enabled $true",
+                    "New-ADUser -Name ssm-user -AccountPassword $encrypt_password -Enabled $true",
                     "Add-ADPrincipalGroupMembership ssm-user -memberOf \"Domain Admins\"",
-                    "Set-ADAccountPassword -Name {{ domainNetBiosName }}\\Administrator -NewPassword $encrypted_password -Reset"
+                    "Set-ADAccountPassword -Identity {{ domainNetBiosName }}\\Administrator -NewPassword $encrypted_password -Reset"
                 ]
             }
         }
