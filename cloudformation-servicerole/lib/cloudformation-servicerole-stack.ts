@@ -1,17 +1,19 @@
 import * as cdk from '@aws-cdk/core';
 import iam = require('@aws-cdk/aws-iam');
+import { CfnOutput } from '@aws-cdk/core';
 
 export class CloudformationServiceroleStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    var document = iam.PolicyDocument.fromJson(
+    var document1 = iam.PolicyDocument.fromJson(
       {
         "Version": "2012-10-17",
         "Statement": [
           {
             "Effect": "Allow",
             "Action": [
+              "cloudformation:*",
               "iam:GetRole",
               "iam:PassRole",
               "iam:DetachRolePolicy",
@@ -27,10 +29,38 @@ export class CloudformationServiceroleStack extends cdk.Stack {
       }
     );
 
-    var policy = new iam.ManagedPolicy(this, "MinimumIamPolicyForCloudFormation", {
+    var policy1 = new iam.ManagedPolicy(this, "MinimumIamPolicyForCloudFormation", {
       description: "Minimum IAM Policy for CloudFormation Service Role",
       managedPolicyName: "MinimumIamPolicyForCloudFormation",
-      document: document,
+      document: document1,
+    });
+
+    var document2 = iam.PolicyDocument.fromJson(
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:*",
+              "lambda:*",
+              "kms:*",
+              "logs:*",
+              "ssm:*",
+              "apigateway:*",
+              "sqs:*",
+              "events:*"
+            ],
+            "Resource": "*"
+          }
+        ]
+      }
+    );
+
+    var policy2 = new iam.ManagedPolicy(this, "ToolsDeployPolicy", {
+      description: "IAM Policy for deploy",
+      managedPolicyName: "ToolsDeployPolicy",
+      document: document2,
     });
 
     var role = new iam.Role(this, "CloudFormationServiceRole", {
@@ -39,9 +69,14 @@ export class CloudformationServiceroleStack extends cdk.Stack {
       assumedBy: new iam.ServicePrincipal('cloudformation.amazonaws.com'),
       path: "/service-role/",
       managedPolicies: [
-        policy,
-        iam.ManagedPolicy.fromAwsManagedPolicyName("PowerUserAccess"),
+        policy1,
+        policy2,
       ]
-    })
+    });
+
+    new CfnOutput(this, "ServiceRoleArn", {
+      value: role.roleArn,
+      description: "CloudFormationServiceRoleArn"
+    });
   }
 }
