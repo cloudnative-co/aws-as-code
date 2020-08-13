@@ -27,6 +27,7 @@ Windows Serverインスタンスを起動して、Active Directory Domain Servic
 ### .envrc
 
 ```sh
+export CDK_DEPLOY_REGION="us-west-2"
 export CDK_MY_VPC_CIDR="10.100.0.0/16"
 export CDK_MY_DOMAIN_NAME="aws.example.com"
 export CDK_MY_DOMAIN_NETBIOS_NAME="EXAMPLE"
