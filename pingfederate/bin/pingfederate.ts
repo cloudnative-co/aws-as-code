@@ -1,22 +1,12 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import cdk = require('@aws-cdk/core');
-import { NetworkStack } from '../lib/network-stack';
-import { ComputerStack } from '../lib/computer-stack';
-import { IdentityStack } from '../lib/identity-stack';
-import { ManagementStack } from '../lib/management-stack';
-import { SecretStack } from '../lib/secrets-stack';
+import { PingFederateStack } from '../lib/pingfederate-stack';
+
+const myenv = {
+    account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION
+}
 
 const app = new cdk.App();
-new SecretStack(app, 'SecretStack');
-new ManagementStack(app, 'ManagementStack');
-const identityStack = new IdentityStack(app, 'IdentityStack');
-const networkStack = new NetworkStack(app, 'NetworkStack');
-new ComputerStack(app, 'ComputerStack', {
-    vpc: networkStack.vpc,
-    addsSg: networkStack.addsSg,
-    pfSg: networkStack.pfSg,
-    remoteAccessSg: networkStack.remoteAccessSg,
-    addsRole: identityStack.addsRole,
-    pfRole: identityStack.pfRole
-});
+const pingfederateStack = new PingFederateStack(app, 'PingFederateStack');
