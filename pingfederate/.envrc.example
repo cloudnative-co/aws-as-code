@@ -1,4 +1,4 @@
-export CDK_MY_VPC_CIDR="10.100.0.0/16"
-export CDK_MY_DOMAIN_NAME="aws.example.com"
-export CDK_MY_DOMAIN_NETBIOS_NAME="EXAMPLE"
+export CDK_DEPLOY_ACCOUN_ID="012345678901"
+export CDK_DEPLOY_REGION="us-west-2"
 export CDK_MY_IPADDRESS="$(curl -s https://checkip.amazonaws.com/)/32"
+export ALB_CERTIFICATE_ARN="arn:aws:acm:us-west-2:,012345678901:certificate/0123abcd-dead-beef-cdef-123456abcdef"
