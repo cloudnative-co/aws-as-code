@@ -1,30 +1,24 @@
 import cdk = require('@aws-cdk/core');
 import iam = require('@aws-cdk/aws-iam')
 import { IRole, ServicePrincipal, Effect } from '@aws-cdk/aws-iam';
+import { Tag } from '@aws-cdk/core';
 
 export class IdentityStack extends cdk.Stack {
   public readonly addsRole: IRole;
-  public readonly pfRole: IRole;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // IAM Role
-    this.addsRole = new iam.Role(this, "adds-role", {
+    const role = new iam.Role(this, "adds-role", {
       assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"),
         iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
-      ]
+      ],
     });
-
-    this.pfRole = new iam.Role(this, "pf-role", {
-      assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMManagedInstanceCore"),
-        iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
-      ]
-    });
+    cdk.Tags.of(role).add("ssmmanaged", "true")
+    this.addsRole = role;
 
     // Policy for Secrets Manager
     const secrets_policy_stat1 = new iam.PolicyStatement({
@@ -46,10 +40,9 @@ export class IdentityStack extends cdk.Stack {
 
     const secrets_policy = new iam.ManagedPolicy(this, "read-secrets", {
       description: "Allow Read Secrets from Secrets Manager",
-      roles: [this.addsRole, this.pfRole],
+      roles: [this.addsRole],
       statements: [secrets_policy_stat1, secrets_policy_stat2]
     });
     secrets_policy.attachToRole(this.addsRole);
-    secrets_policy.attachToRole(this.pfRole);
   }
 }

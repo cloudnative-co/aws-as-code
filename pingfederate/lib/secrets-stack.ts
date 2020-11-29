@@ -12,7 +12,10 @@ export class SecretStack extends cdk.Stack {
     this.adminPassword = new secretsmanager.Secret(this, "AdminPassword", {
       secretName: "AdminPassword",
       description: "Administrator and Directory Service Restore Mode Password",
-      generateSecretString: { passwordLength: 32 }
+      generateSecretString: {
+        passwordLength: 16,
+        excludePunctuation: false
+      }
     })
   }
 }

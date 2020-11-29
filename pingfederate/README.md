@@ -1,18 +1,78 @@
-# Welcome to your CDK TypeScript project
+# PingFederate Stack
 
-This is a blank project for TypeScript development with CDK.
+## 概要
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+Windows Serverインスタンスを起動して、Active Directory Domain Serviceのインストールと、PingFederateインスタンスを起動するスタック。
 
-## Useful commands
+## 構成
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+* VPCを作成する
+* ADDSが稼働するEC2を作成する
+* ADDSのEC2が利用するIAM Roleを作成する
+* ADDSをインストールするPowerShell Scriptを定義するSSM Documentを作成する
+* ADDS構成時に使うパスワードを生成するSecrets ManagerのSecretを作成する
+* ADDSのDNSを参照するためのDHCP Option Setの作成と連携
 
-## Using Environment Variables
+## 使い方
 
-* `CDK_MY_IPADDRESS`    for EC2 remote access control
+* `.envrc.example` を `.envrc` にコピーする。
+* `.envrc` の中身を、必要に応じて修正する。
+* AddsIdentityStack, AddsManagementStack, AddsNetworkStack, AddsSecretStack, AddsComputerStackをdeployする。
+* ADDSのインスタンスが起動して、SSMのマネージドインスタンスに登録されたら、 `./scripts/install-adds.sh` を実行する。
+* ADDSのインストールが完了し、OSが再起動完了したら、`./scripts/setup-ssm-user.sh` を実行する。
+* AddsDhcpStackをdeployする。
+
+## 設定
+
+### .envrc
+
+```sh
+export CDK_DEPLOY_REGION="us-west-2"
+export CDK_MY_VPC_CIDR="10.100.0.0/16"
+export CDK_MY_DOMAIN_NAME="aws.example.com"
+export CDK_MY_DOMAIN_NETBIOS_NAME="EXAMPLE"
+export CDK_MY_UI_TYPE="cli"
+```
+
+<dl>
+<dt>CDK_MY_VPC_CIDR</dt>
+<dd>作成するVPCのCIDR</dd>
+<dt>CDK_MY_DOMAIN_NAME</dt>
+<dd>ADDSのドメイン名</dd>
+<dt>CDK_MY_DOMAIN_NETBIOS_NAME</dt>
+<dd>ADDSのNetBios形式のドメイン名</dd>
+<dt>CDK_MY_UI_TYPE</dt>
+<dd>`gui`または`cli`を指定する。`cdk.json`のcontextで、利用するインスタンスサイズやAMIを定義していて、そこの切り替えに利用する。</dd>
+</dl>
+
+### cdk.json
+
+```json
+  "context": {
+    "gui": {
+      "instanceClass": "t3a",
+      "instanceSize": "large",
+      "windowsAmiVersion": "Windows_Server-2019-English-Full-Base"
+    },
+    "cli": {
+      "instanceClass": "t3a",
+      "instanceSize": "micro",
+      "windowsAmiVersion": "Windows_Server-2019-English-Core-Base"
+    }
+  }
+```
+
+<dl>
+<dt>gui</dt>
+<dd>GUIが利用できる一般的なWindows Server 2019を起動する</dd>
+<dt>cli</dt>
+<dd>GUIが利用できないWindows Server Coreを起動する</dd>
+</dl>
+
+## 注意点
+
+* ADDSが起動する前にDHCP Options Setを作成してしまうと、名前解決できなくなってしまう。
+  * その場合は、一度 default のDHCP Option Setにアタッチし直すと、AmazonのDNSが利用されるようになる。
+* SSM経由で管理する前提なので、KeyPairは未設定。
+* Administratorのパスワードは、Secrets Managerを使って生成したパスワードを設定するので、下記のコマンドで取得できる。
+  * `aws secretsmanager get-secret-value --secret-id AdminPassword`

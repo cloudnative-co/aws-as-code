@@ -3,6 +3,7 @@ import { CfnDocument } from '@aws-cdk/aws-ssm';
 
 export class ManagementStack extends cdk.Stack {
   public readonly installAddsDocument: CfnDocument;
+  public readonly setupSsmUserDocument: CfnDocument;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -16,6 +17,18 @@ export class ManagementStack extends cdk.Stack {
         {
           key: "Name",
           value: "install-adds-doc"
+        }
+      ]
+    });
+
+    const setup_ssm_user_doc_json = require("../scripts/setup-ssm-user.json");
+    this.setupSsmUserDocument = new CfnDocument(this, "setup-ssm-user", {
+      documentType: "Command",
+      content: setup_ssm_user_doc_json,
+      tags: [
+        {
+          key: "Name",
+          value: "setup-ssm-user"
         }
       ]
     });

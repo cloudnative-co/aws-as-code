@@ -1,8 +1,8 @@
 {
-  "name": "pingfederate",
+  "name": "activedirectory",
   "version": "0.1.0",
   "bin": {
-    "pingfederate": "bin/pingfederate.js"
+    "pingfederate": "bin/activedirectory.js"
   },
   "scripts": {
     "build": "tsc",
@@ -14,7 +14,6 @@
     "@aws-cdk/assert": "^1.75.0",
     "@types/jest": "^26.0.15",
     "@types/node": "14.14.10",
-    "aws-cdk": "^1.75.0",
     "jest": "^26.6.3",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.0.0",
@@ -27,6 +26,7 @@
     "@aws-cdk/aws-ssm": "^1.75.0",
     "@aws-cdk/core": "^1.75.0",
     "@types/fs-extra": "^9.0.4",
+    "aws-cdk": "^1.75.0",
     "source-map-support": "^0.5.19"
   }
 }
