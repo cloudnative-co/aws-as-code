@@ -4,12 +4,12 @@
     "gui": {
       "instanceClass": "t3a",
       "instanceSize": "large",
-      "windowsAmiVersion": "Windows_Server-2019-English-Full-Base"
+      "windowsAmiVersion": "Windows_Server-2016-English-Full-Base"
     },
     "cli": {
       "instanceClass": "t3a",
       "instanceSize": "micro",
-      "windowsAmiVersion": "Windows_Server-2019-English-Core-Base"
+      "windowsAmiVersion": "Windows_Server-2016-English-Core-Base"
     }
   }
 }

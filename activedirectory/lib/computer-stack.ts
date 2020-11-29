@@ -17,9 +17,9 @@ export class ComputerStack extends cdk.Stack {
     super(scope, id, props);
 
     // Security Groups
-    const addsSg = ec2.SecurityGroup.fromSecurityGroupId(this, "adds-sg", Fn.importValue("adds-sg-id"));
-    const internalSg = ec2.SecurityGroup.fromSecurityGroupId(this, "internal-sg", Fn.importValue("internal-sg-id"));
-    const remoteAccessSg = ec2.SecurityGroup.fromSecurityGroupId(this, "remote-access-sg", Fn.importValue("remote-access-sg-id"));
+    const addsSg = ec2.SecurityGroup.fromSecurityGroupId(this, "adds-sg", Fn.importValue(process.env.CDK_MY_PREFIX + "adds-sg-id"));
+    const internalSg = ec2.SecurityGroup.fromSecurityGroupId(this, "internal-sg", Fn.importValue(process.env.CDK_MY_PREFIX + "internal-sg-id"));
+    const remoteAccessSg = ec2.SecurityGroup.fromSecurityGroupId(this, "remote-access-sg", Fn.importValue(process.env.CDK_MY_PREFIX + "remote-access-sg-id"));
 
     // EC2 Instance Parameters
     const uiType = process.env.CDK_MY_UI_TYPE || "cli";
@@ -42,7 +42,7 @@ export class ComputerStack extends cdk.Stack {
     });
 
     this.addsPrivateIpAddress = new CfnOutput(this, "addsprivateipaddress", {
-      exportName: "addsprivateipaddress",
+      exportName: process.env.CDK_MY_PREFIX + "addsprivateipaddress",
       value: adds.instancePrivateIp,
       description: "ADDS Instance Private IP Address"
     });

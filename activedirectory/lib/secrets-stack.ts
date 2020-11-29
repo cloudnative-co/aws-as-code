@@ -10,7 +10,7 @@ export class SecretStack extends cdk.Stack {
 
     // Generate DSRM Password
     this.adminPassword = new secretsmanager.Secret(this, "AdminPassword", {
-      secretName: "AdminPassword",
+      secretName: process.env.CDK_MY_PREFIX + "AdminPassword",
       description: "Administrator and Directory Service Restore Mode Password",
       generateSecretString: {
         passwordLength: 16,

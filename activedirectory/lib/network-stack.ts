@@ -2,6 +2,7 @@ import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2')
 import { Vpc } from '@aws-cdk/aws-ec2';
 import { CfnOutput } from '@aws-cdk/core';
+import { env } from 'process';
 
 export class NetworkStack extends cdk.Stack {
   public readonly vpc: Vpc;
@@ -54,19 +55,19 @@ export class NetworkStack extends cdk.Stack {
     });
 
     this.remoteAccessSgId = new CfnOutput(this, "remote-access-sg-id", {
-      exportName: "remote-access-sg-id",
+      exportName: process.env.CDK_MY_PREFIX + "remote-access-sg-id",
       value: remoteAccessSg.securityGroupId,
       description: "Security Group for remote access"
     });
 
     this.internalSgId = new CfnOutput(this, "internal-sg-id", {
-      exportName: "internal-sg-id",
+      exportName: process.env.CDK_MY_PREFIX + "internal-sg-id",
       value: internalSg.securityGroupId,
       description: "Security Group for VPC Internal"
     });
 
     this.addsSgId = new CfnOutput(this, "adds-sg-id", {
-      exportName: "adds-sg-id",
+      exportName: process.env.CDK_MY_PREFIX + "adds-sg-id",
       value: addsSg.securityGroupId,
       description: "Security Group for ADDS"
     });

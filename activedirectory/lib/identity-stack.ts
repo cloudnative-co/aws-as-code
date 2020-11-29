@@ -1,7 +1,7 @@
 import cdk = require('@aws-cdk/core');
 import iam = require('@aws-cdk/aws-iam')
 import { IRole, ServicePrincipal, Effect } from '@aws-cdk/aws-iam';
-import { Tag } from '@aws-cdk/core';
+import { Tags } from '@aws-cdk/core';
 
 export class IdentityStack extends cdk.Stack {
   public readonly addsRole: IRole;
@@ -17,7 +17,7 @@ export class IdentityStack extends cdk.Stack {
         iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
       ],
     });
-    Tag.add(role, "ssmmanaged", "true");
+    Tags.of(role).add("ssmmanaged", "true");
     this.addsRole = role;
 
     // Policy for Secrets Manager
