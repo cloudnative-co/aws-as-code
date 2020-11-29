@@ -19,6 +19,11 @@
             "type": "String",
             "default": "WinThreshold",
             "description": "Accept Values: Win2008, Win2008R2, Win2012, Win2012R2, WinThreshold, Default"
+        },
+        "prefix": {
+            "type": "String",
+            "default": "",
+            "description": "Your CDK_MY_PREFIX"
         }
     },
     "mainSteps": [
@@ -27,7 +32,7 @@
             "name": "runPowerShellScript",
             "inputs": {
                 "runCommand": [
-                    "$password = Get-SECSecretValue -SecretId AdminPassword",
+                    "$password = Get-SECSecretValue -SecretId {{ prefix }}AdminPassword",
                     "$encrypted_password = ConvertTo-SecureString $password.SecureString -AsPlainText -Force",
                     "install-windowsfeature AD-Domain-Services,GPMC,RSAT-AD-PowerShell,RSAT-AD-AdminCenter,RSAT-ADDS-Tools,RSAT-DNS-Server",
                     "Import-Module ADDSDeployment",

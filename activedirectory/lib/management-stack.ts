@@ -1,5 +1,6 @@
 import cdk = require('@aws-cdk/core');
 import { CfnDocument } from '@aws-cdk/aws-ssm';
+import { CfnOutput, Fn } from '@aws-cdk/core';
 
 export class ManagementStack extends cdk.Stack {
   public readonly installAddsDocument: CfnDocument;
@@ -31,6 +32,18 @@ export class ManagementStack extends cdk.Stack {
           value: "setup-ssm-user"
         }
       ]
+    });
+
+    new CfnOutput(this, "installaddsdoc", {
+      exportName: process.env.CDK_MY_PREFIX + "installaddsdoc",
+      value: this.installAddsDocument.logicalId,
+      description: "Adds Install doc"
+    });
+
+    new CfnOutput(this, "setupssmuser", {
+      exportName: process.env.CDK_MY_PREFIX + "setupssmuser",
+      value: this.setupSsmUserDocument.logicalId,
+      description: "Setup SSM User"
     });
   }
 }

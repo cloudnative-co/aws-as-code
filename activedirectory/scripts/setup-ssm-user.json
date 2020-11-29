@@ -5,6 +5,11 @@
         "domainNetBiosName": {
             "type": "String",
             "description": "Domain NetBIOS Name for ADDS"
+        },
+        "prefix": {
+            "type": "String",
+            "default": "",
+            "description": "Your CDK_MY_PREFIX"
         }
     },
     "mainSteps": [
@@ -13,12 +18,13 @@
             "name": "runPowerShellScript",
             "precondition": {
                 "StringEquals": [
-                    "platformType", "Windows"
+                    "platformType",
+                    "Windows"
                 ]
             },
             "inputs": {
                 "runCommand": [
-                    "$password = Get-SECSecretValue -SecretId AdminPassword",
+                    "$password = Get-SECSecretValue -SecretId {{ prefix }}AdminPassword",
                     "$encrypted_password = ConvertTo-SecureString $password.SecretString -AsPlainText -Force",
                     "Set-ADAccountPassword -Identity Administrator -NewPassword $encrypted_password -Reset",
                     "New-ADUser -Name ssm-user -AccountPassword $encrypted_password -Enabled $true",
