@@ -1,10 +1,12 @@
 import cdk = require('@aws-cdk/core');
 import iam = require('@aws-cdk/aws-iam')
 import { IRole, ServicePrincipal, Effect } from '@aws-cdk/aws-iam';
-import { Tags } from '@aws-cdk/core';
+import { CfnOutput, Tags } from '@aws-cdk/core';
+import { outputFile } from 'fs-extra';
 
 export class IdentityStack extends cdk.Stack {
   public readonly addsRole: IRole;
+  public readonly secretsPolicy: iam.IManagedPolicy;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -43,6 +45,13 @@ export class IdentityStack extends cdk.Stack {
       roles: [this.addsRole],
       statements: [secrets_policy_stat1, secrets_policy_stat2]
     });
-    secrets_policy.attachToRole(this.addsRole);
+    this.secretsPolicy = secrets_policy;
+
+    new CfnOutput(this, "ReadSecretsPolicyArn", {
+      exportName: process.env.CDK_MY_PREFIX + "read-secrets-arn",
+      value: secrets_policy.managedPolicyArn,
+      description: "Read Secrests Policy"
+    })
+
   }
 }

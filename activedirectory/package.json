@@ -2,7 +2,7 @@
   "name": "activedirectory",
   "version": "0.1.0",
   "bin": {
-    "pingfederate": "bin/activedirectory.js"
+    "activedirectory": "bin/activedirectory.js"
   },
   "scripts": {
     "build": "tsc",

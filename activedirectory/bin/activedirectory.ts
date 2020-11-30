@@ -7,6 +7,8 @@ import { IdentityStack } from '../lib/identity-stack';
 import { ManagementStack } from '../lib/management-stack';
 import { SecretStack } from '../lib/secrets-stack';
 import { DhcpStack } from '../lib/dhcpoptionset-stack';
+import { PingFederateStack } from '../lib/pingfederate-stack';
+import { env } from 'process';
 
 const myenv = {
     account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
@@ -23,6 +25,11 @@ const computerStack = new ComputerStack(app, myenv.prefix + 'ComputerStack', {
     addsRole: identityStack.addsRole,
     env: myenv
 });
+new PingFederateStack(app, myenv.prefix + 'PingFederateStack', {
+    vpc: networkStack.vpc,
+    secretsPolicy: identityStack.secretsPolicy,
+    env: myenv
+})
 new DhcpStack(app, myenv.prefix + 'DhcpStack', {
     vpc: networkStack.vpc,
     addsPrivateIpAddress: computerStack.addsPrivateIpAddress,
