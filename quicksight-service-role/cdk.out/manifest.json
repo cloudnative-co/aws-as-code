@@ -1,0 +1,134 @@
+{
+  "version": "5.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "QuicksightServiceRoleStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "QuicksightServiceRoleStack.template.json"
+      },
+      "metadata": {
+        "/QuicksightServiceRoleStack/aws-quicksight-service-role-v0/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "awsquicksightservicerolev0E31C8968",
+            "trace": [
+              "new Role (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/@aws-cdk/aws-iam/lib/role.ts:318:18)",
+              "new QuicksightServiceRoleStack (/Users/isobe/repos/aws-as-code/quicksight-service-role/lib/quicksight-service-role-stack.ts:8:35)",
+              "Object.<anonymous> (/Users/isobe/repos/aws-as-code/quicksight-service-role/bin/quicksight-service-role.ts:7:1)",
+              "Module._compile (internal/modules/cjs/loader.js:1201:30)",
+              "Module.m._compile (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/index.ts:858:23)",
+              "Module._extensions..js (internal/modules/cjs/loader.js:1221:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/index.ts:861:12)",
+              "Module.load (internal/modules/cjs/loader.js:1050:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:938:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:71:12)",
+              "main (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/bin.ts:227:14)",
+              "Object.<anonymous> (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/bin.ts:513:3)",
+              "Module._compile (internal/modules/cjs/loader.js:1201:30)",
+              "Object.Module._extensions..js (internal/modules/cjs/loader.js:1221:10)",
+              "Module.load (internal/modules/cjs/loader.js:1050:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:938:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:71:12)",
+              "/Users/isobe/.anyenv/envs/nodenv/versions/14.5.0/lib/node_modules/npm/node_modules/libnpx/index.js:268:14"
+            ]
+          }
+        ],
+        "/QuicksightServiceRoleStack/AWSQuickSightRDSPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWSQuickSightRDSPolicy84607AFD",
+            "trace": [
+              "new ManagedPolicy (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/@aws-cdk/aws-iam/lib/managed-policy.ts:222:22)",
+              "new QuicksightServiceRoleStack (/Users/isobe/repos/aws-as-code/quicksight-service-role/lib/quicksight-service-role-stack.ts:22:22)",
+              "Object.<anonymous> (/Users/isobe/repos/aws-as-code/quicksight-service-role/bin/quicksight-service-role.ts:7:1)",
+              "Module._compile (internal/modules/cjs/loader.js:1201:30)",
+              "Module.m._compile (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/index.ts:858:23)",
+              "Module._extensions..js (internal/modules/cjs/loader.js:1221:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/index.ts:861:12)",
+              "Module.load (internal/modules/cjs/loader.js:1050:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:938:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:71:12)",
+              "main (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/bin.ts:227:14)",
+              "Object.<anonymous> (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/bin.ts:513:3)",
+              "Module._compile (internal/modules/cjs/loader.js:1201:30)",
+              "Object.Module._extensions..js (internal/modules/cjs/loader.js:1221:10)",
+              "Module.load (internal/modules/cjs/loader.js:1050:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:938:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:71:12)",
+              "/Users/isobe/.anyenv/envs/nodenv/versions/14.5.0/lib/node_modules/npm/node_modules/libnpx/index.js:268:14"
+            ]
+          }
+        ],
+        "/QuicksightServiceRoleStack/AWSQuickSightIAMPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWSQuickSightIAMPolicy9FEB08A3",
+            "trace": [
+              "new ManagedPolicy (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/@aws-cdk/aws-iam/lib/managed-policy.ts:222:22)",
+              "new QuicksightServiceRoleStack (/Users/isobe/repos/aws-as-code/quicksight-service-role/lib/quicksight-service-role-stack.ts:35:22)",
+              "Object.<anonymous> (/Users/isobe/repos/aws-as-code/quicksight-service-role/bin/quicksight-service-role.ts:7:1)",
+              "Module._compile (internal/modules/cjs/loader.js:1201:30)",
+              "Module.m._compile (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/index.ts:858:23)",
+              "Module._extensions..js (internal/modules/cjs/loader.js:1221:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/index.ts:861:12)",
+              "Module.load (internal/modules/cjs/loader.js:1050:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:938:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:71:12)",
+              "main (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/bin.ts:227:14)",
+              "Object.<anonymous> (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/bin.ts:513:3)",
+              "Module._compile (internal/modules/cjs/loader.js:1201:30)",
+              "Object.Module._extensions..js (internal/modules/cjs/loader.js:1221:10)",
+              "Module.load (internal/modules/cjs/loader.js:1050:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:938:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:71:12)",
+              "/Users/isobe/.anyenv/envs/nodenv/versions/14.5.0/lib/node_modules/npm/node_modules/libnpx/index.js:268:14"
+            ]
+          }
+        ],
+        "/QuicksightServiceRoleStack/AWSQuickSightRedshiftPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWSQuickSightRedshiftPolicyFCA61129",
+            "trace": [
+              "new ManagedPolicy (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/@aws-cdk/aws-iam/lib/managed-policy.ts:222:22)",
+              "new QuicksightServiceRoleStack (/Users/isobe/repos/aws-as-code/quicksight-service-role/lib/quicksight-service-role-stack.ts:48:27)",
+              "Object.<anonymous> (/Users/isobe/repos/aws-as-code/quicksight-service-role/bin/quicksight-service-role.ts:7:1)",
+              "Module._compile (internal/modules/cjs/loader.js:1201:30)",
+              "Module.m._compile (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/index.ts:858:23)",
+              "Module._extensions..js (internal/modules/cjs/loader.js:1221:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/index.ts:861:12)",
+              "Module.load (internal/modules/cjs/loader.js:1050:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:938:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:71:12)",
+              "main (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/bin.ts:227:14)",
+              "Object.<anonymous> (/Users/isobe/repos/aws-as-code/quicksight-service-role/node_modules/ts-node/src/bin.ts:513:3)",
+              "Module._compile (internal/modules/cjs/loader.js:1201:30)",
+              "Object.Module._extensions..js (internal/modules/cjs/loader.js:1221:10)",
+              "Module.load (internal/modules/cjs/loader.js:1050:32)",
+              "Function.Module._load (internal/modules/cjs/loader.js:938:14)",
+              "Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:71:12)",
+              "/Users/isobe/.anyenv/envs/nodenv/versions/14.5.0/lib/node_modules/npm/node_modules/libnpx/index.js:268:14"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "runtime": {
+    "libraries": {
+      "@aws-cdk/core": "1.51.0",
+      "@aws-cdk/cx-api": "1.51.0",
+      "@aws-cdk/cloud-assembly-schema": "1.51.0",
+      "@aws-cdk/aws-iam": "1.51.0",
+      "@aws-cdk/region-info": "1.51.0",
+      "jsii-runtime": "node.js/v14.5.0"
+    }
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree"
+      },
+      "QuicksightServiceRoleStack": {
+        "id": "QuicksightServiceRoleStack",
+        "path": "QuicksightServiceRoleStack",
+        "children": {
+          "AWSQuicksightAthenaAccess": {
+            "id": "AWSQuicksightAthenaAccess",
+            "path": "QuicksightServiceRoleStack/AWSQuicksightAthenaAccess"
+          },
+          "aws-quicksight-service-role-v0": {
+            "id": "aws-quicksight-service-role-v0",
+            "path": "QuicksightServiceRoleStack/aws-quicksight-service-role-v0",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "QuicksightServiceRoleStack/aws-quicksight-service-role-v0/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "quicksight.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "managedPolicyArns": [
+                      "arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess"
+                    ],
+                    "roleName": "aws-quicksight-service-role-v0"
+                  }
+                }
+              }
+            }
+          },
+          "AWSQuickSightRDSPolicy": {
+            "id": "AWSQuickSightRDSPolicy",
+            "path": "QuicksightServiceRoleStack/AWSQuickSightRDSPolicy",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "QuicksightServiceRoleStack/AWSQuickSightRDSPolicy/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::ManagedPolicy",
+                  "aws:cdk:cloudformation:props": {
+                    "policyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "rds:Describe*",
+                          "Effect": "Allow",
+                          "Resource": "*"
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "description": "",
+                    "managedPolicyName": "AWSQuickSightRDSPolicy",
+                    "path": "/service-role/",
+                    "roles": [
+                      {
+                        "Ref": "awsquicksightservicerolev0E31C8968"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "AWSQuickSightIAMPolicy": {
+            "id": "AWSQuickSightIAMPolicy",
+            "path": "QuicksightServiceRoleStack/AWSQuickSightIAMPolicy",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "QuicksightServiceRoleStack/AWSQuickSightIAMPolicy/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::ManagedPolicy",
+                  "aws:cdk:cloudformation:props": {
+                    "policyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "iam:List*",
+                          "Effect": "Allow",
+                          "Resource": "*"
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "description": "",
+                    "managedPolicyName": "AWSQuickSightIAMPolicy",
+                    "path": "/service-role/",
+                    "roles": [
+                      {
+                        "Ref": "awsquicksightservicerolev0E31C8968"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "AWSQuickSightRedshiftPolicy": {
+            "id": "AWSQuickSightRedshiftPolicy",
+            "path": "QuicksightServiceRoleStack/AWSQuickSightRedshiftPolicy",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "QuicksightServiceRoleStack/AWSQuickSightRedshiftPolicy/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::ManagedPolicy",
+                  "aws:cdk:cloudformation:props": {
+                    "policyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "redshift:Describe*",
+                          "Effect": "Allow",
+                          "Resource": "*"
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "description": "",
+                    "managedPolicyName": "AWSQuickSightRedshiftPolicy",
+                    "path": "/service-role/",
+                    "roles": [
+                      {
+                        "Ref": "awsquicksightservicerolev0E31C8968"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
