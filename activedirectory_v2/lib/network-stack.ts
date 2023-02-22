@@ -14,7 +14,7 @@ export class NetworkStack extends cdk.Stack {
 
     // VPC
     this.vpc = new ec2.Vpc(this, 'VPC', {
-      cidr: process.env.CDK_MY_VPC_CIDR || '10.100.0.0/16',
+      ipAddresses: ec2.IpAddresses.cidr(process.env.CDK_MY_VPC_CIDR || '10.100.0.0/16'),
       subnetConfiguration: [
         {
           name: 'public',
