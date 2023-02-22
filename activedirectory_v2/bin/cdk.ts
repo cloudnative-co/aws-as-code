@@ -3,7 +3,7 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 
 import { SecretStack } from '../lib/secrets-stack';
-// import { ManagementStack } from '../lib/management-stack';
+import { ManagementStack } from '../lib/management-stack';
 
 // import { NetworkStack } from '../lib/network-stack';
 // import { IdentityStack } from '../lib/identity-stack';
@@ -19,7 +19,7 @@ const myenv = {
 const app = new cdk.App();
 
 new SecretStack(app, myenv.prefix + 'SecretStack', { env: myenv });
-// new ManagementStack(app, myenv.prefix + 'ManagementStack', { env: myenv });
+new ManagementStack(app, myenv.prefix + 'ManagementStack', { env: myenv });
 // const identityStack = new IdentityStack(app, myenv.prefix + 'IdentityStack', { env: myenv });
 // const networkStack = new NetworkStack(app, myenv.prefix + 'NetworkStack', { env: myenv });
 // const computerStack = new ComputerStack(app, myenv.prefix + 'ComputerStack', {

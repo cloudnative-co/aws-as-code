@@ -1,0 +1,44 @@
+{
+    "schemaVersion": "2.2",
+    "description": "Install-ADDSForest",
+    "parameters": {
+        "domainName": {
+            "type": "String",
+            "description": "FQDN Domain Name for ADDS"
+        },
+        "domainNetBiosName": {
+            "type": "String",
+            "description": "Domain NetBIOS Name for ADDS"
+        },
+        "forestMode": {
+            "type": "String",
+            "default": "WinThreshold",
+            "description": "Accept Values: Win2008, Win2008R2, Win2012, Win2012R2, WinThreshold, Default"
+        },
+        "domainMode": {
+            "type": "String",
+            "default": "WinThreshold",
+            "description": "Accept Values: Win2008, Win2008R2, Win2012, Win2012R2, WinThreshold, Default"
+        },
+        "prefix": {
+            "type": "String",
+            "default": "",
+            "description": "Your CDK_MY_PREFIX"
+        }
+    },
+    "mainSteps": [
+        {
+            "action": "aws:runPowerShellScript",
+            "name": "runPowerShellScript",
+            "inputs": {
+                "runCommand": [
+                    "$password = Get-SECSecretValue -SecretId {{ prefix }}AdminPassword",
+                    "$encrypted_password = ConvertTo-SecureString $password.SecureString -AsPlainText -Force",
+                    "install-windowsfeature AD-Domain-Services,GPMC,RSAT-AD-PowerShell,RSAT-AD-AdminCenter,RSAT-ADDS-Tools,RSAT-DNS-Server",
+                    "Import-Module ADDSDeployment",
+                    "Install-ADDSForest -DomainName {{ domainName }} -DomainNetbiosName {{ domainNetBiosName }} -ForestMode {{ forestMode }} -DomainMode {{ domainMode }} -SafeModeAdministratorPassword $encrypted_password -DatabasePath \"C:\\Windows\\NTDS\" -LogPath \"C:\\Windows\\NTDS\" -SysvolPath \"C:\\Windows\\SYSVOL\" -InstallDns:$true -CreateDnsDelegation:$false -Force:$true "
+                ]
+            }
+        }
+    ]
+}
