@@ -1,16 +1,15 @@
-import cdk = require('@aws-cdk/core');
-import ec2 = require('@aws-cdk/aws-ec2')
-import { Vpc } from '@aws-cdk/aws-ec2';
-import { CfnOutput } from '@aws-cdk/core';
+import * as cdk from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import { Construct } from 'constructs';
 import { env } from 'process';
 
 export class NetworkStack extends cdk.Stack {
-  public readonly vpc: Vpc;
-  public readonly addsSgId: CfnOutput;
-  public readonly internalSgId: CfnOutput;
-  public readonly remoteAccessSgId: CfnOutput;
+  public readonly vpc: ec2.Vpc;
+  public readonly addsSgId: cdk.CfnOutput;
+  public readonly internalSgId: cdk.CfnOutput;
+  public readonly remoteAccessSgId: cdk.CfnOutput;
 
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // VPC
@@ -54,19 +53,19 @@ export class NetworkStack extends cdk.Stack {
       addsSg.addIngressRule(internalSg, ec2.Port.udp(v), "internal");
     });
 
-    this.remoteAccessSgId = new CfnOutput(this, "remote-access-sg-id", {
+    this.remoteAccessSgId = new cdk.CfnOutput(this, "remote-access-sg-id", {
       exportName: process.env.CDK_MY_PREFIX + "remote-access-sg-id",
       value: remoteAccessSg.securityGroupId,
       description: "Security Group for remote access"
     });
 
-    this.internalSgId = new CfnOutput(this, "internal-sg-id", {
+    this.internalSgId = new cdk.CfnOutput(this, "internal-sg-id", {
       exportName: process.env.CDK_MY_PREFIX + "internal-sg-id",
       value: internalSg.securityGroupId,
       description: "Security Group for VPC Internal"
     });
 
-    this.addsSgId = new CfnOutput(this, "adds-sg-id", {
+    this.addsSgId = new cdk.CfnOutput(this, "adds-sg-id", {
       exportName: process.env.CDK_MY_PREFIX + "adds-sg-id",
       value: addsSg.securityGroupId,
       description: "Security Group for ADDS"
