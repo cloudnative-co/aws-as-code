@@ -17,6 +17,16 @@
     ]
   },
   "context": {
+    "gui": {
+        "instanceClass": "t3a",
+        "instanceSize": "large",
+        "windowsAmiVersion": "Windows_Server-2019-English-Full-Base"
+    },
+    "cli": {
+        "instanceClass": "t3a",
+        "instanceSize": "micro",
+        "windowsAmiVersion": "Windows_Server-2019-English-Core-Base"
+    },
     "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
     "@aws-cdk/core:checkSecretUsage": true,
     "@aws-cdk/core:target-partitions": [
