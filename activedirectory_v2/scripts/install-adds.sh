@@ -11,7 +11,7 @@ echo $ADDS_INSTALL_DOCUMENT_NAME
 RESULT=`aws ssm send-command --instance-ids "${ADDS_INSTANCE_ID}" --document-name "${ADDS_INSTALL_DOCUMENT_NAME}" --parameters "domainName=${CDK_MY_DOMAIN_NAME},domainNetBiosName=${CDK_MY_DOMAIN_NETBIOS_NAME},prefix=${CDK_MY_PREFIX}" --cloud-watch-output-config '{"CloudWatchOutputEnabled":true}'`
 
 if [ -x `which jq` ]; then
-  echo $RESULT | jq ". | { CommandId: .Command.CommandId, InstanceIds: .Command.InstanceIds}"
-else
   echo $RESULT
+else
+  echo $RESULT | jq ". | { CommandId: .Command.CommandId, InstanceIds: .Command.InstanceIds}"
 fi
