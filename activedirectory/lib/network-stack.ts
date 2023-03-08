@@ -1,27 +1,35 @@
-import cdk = require('@aws-cdk/core');
-import ec2 = require('@aws-cdk/aws-ec2')
-import { Vpc } from '@aws-cdk/aws-ec2';
-import { CfnOutput } from '@aws-cdk/core';
+import * as cdk from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import { Construct } from 'constructs';
 import { env } from 'process';
 
 export class NetworkStack extends cdk.Stack {
-  public readonly vpc: Vpc;
-  public readonly addsSgId: CfnOutput;
-  public readonly internalSgId: CfnOutput;
-  public readonly remoteAccessSgId: CfnOutput;
+  public readonly vpc: ec2.Vpc;
+  public readonly addsSgId: cdk.CfnOutput;
+  public readonly internalSgId: cdk.CfnOutput;
+  public readonly remoteAccessSgId: cdk.CfnOutput;
 
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // VPC
     this.vpc = new ec2.Vpc(this, 'VPC', {
-      cidr: process.env.CDK_MY_VPC_CIDR || '10.100.0.0/16',
+      ipAddresses: ec2.IpAddresses.cidr(process.env.CDK_MY_VPC_CIDR || '10.100.0.0/16'),
       subnetConfiguration: [
         {
           name: 'public',
           subnetType: ec2.SubnetType.PUBLIC
         }
       ]
+    });
+
+    // DHCP OptionSet
+    const cfn_dhcp_option_set = new ec2.CfnDHCPOptions(this, "default-dhcp-options", {
+      domainNameServers: ['AmazonProvidedDNS']
+    });
+    const dhcp_vpc_assoc = new ec2.CfnVPCDHCPOptionsAssociation(this, "default-dhcp-vpc-assoc", {
+      dhcpOptionsId: cfn_dhcp_option_set.ref,
+      vpcId: this.vpc.vpcId
     });
 
     // SecurityGroup
@@ -54,19 +62,19 @@ export class NetworkStack extends cdk.Stack {
       addsSg.addIngressRule(internalSg, ec2.Port.udp(v), "internal");
     });
 
-    this.remoteAccessSgId = new CfnOutput(this, "remote-access-sg-id", {
+    this.remoteAccessSgId = new cdk.CfnOutput(this, "remote-access-sg-id", {
       exportName: process.env.CDK_MY_PREFIX + "remote-access-sg-id",
       value: remoteAccessSg.securityGroupId,
       description: "Security Group for remote access"
     });
 
-    this.internalSgId = new CfnOutput(this, "internal-sg-id", {
+    this.internalSgId = new cdk.CfnOutput(this, "internal-sg-id", {
       exportName: process.env.CDK_MY_PREFIX + "internal-sg-id",
       value: internalSg.securityGroupId,
       description: "Security Group for VPC Internal"
     });
 
-    this.addsSgId = new CfnOutput(this, "adds-sg-id", {
+    this.addsSgId = new cdk.CfnOutput(this, "adds-sg-id", {
       exportName: process.env.CDK_MY_PREFIX + "adds-sg-id",
       value: addsSg.securityGroupId,
       description: "Security Group for ADDS"

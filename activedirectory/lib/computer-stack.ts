@@ -1,29 +1,34 @@
-import cdk = require('@aws-cdk/core');
-import ec2 = require('@aws-cdk/aws-ec2')
-import { IVpc, IInstance } from '@aws-cdk/aws-ec2';
-import { IRole } from '@aws-cdk/aws-iam';
-import { CfnOutput, Fn } from '@aws-cdk/core'
+import * as cdk from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import { Construct } from 'constructs';
 
 interface ComputerStackProps extends cdk.StackProps {
-  vpc: IVpc,
-  addsRole: IRole,
+  vpc: ec2.IVpc,
+  addsRole: iam.IRole,
 };
 
 export class ComputerStack extends cdk.Stack {
-  public readonly addsInstance: IInstance;
-  public readonly addsPrivateIpAddress: CfnOutput;
+  public readonly addsInstance: ec2.IInstance;
+  public readonly addsPrivateIpAddress: cdk.CfnOutput;
 
-  constructor(scope: cdk.Construct, id: string, props: ComputerStackProps) {
+  constructor(scope: Construct, id: string, props: ComputerStackProps) {
     super(scope, id, props);
 
     // Security Groups
-    const addsSg = ec2.SecurityGroup.fromSecurityGroupId(this, "adds-sg", Fn.importValue(process.env.CDK_MY_PREFIX + "adds-sg-id"));
-    const internalSg = ec2.SecurityGroup.fromSecurityGroupId(this, "internal-sg", Fn.importValue(process.env.CDK_MY_PREFIX + "internal-sg-id"));
-    const remoteAccessSg = ec2.SecurityGroup.fromSecurityGroupId(this, "remote-access-sg", Fn.importValue(process.env.CDK_MY_PREFIX + "remote-access-sg-id"));
+    const addsSg = ec2.SecurityGroup.fromSecurityGroupId(this, "adds-sg", cdk.Fn.importValue(process.env.CDK_MY_PREFIX + "adds-sg-id"));
+    const internalSg = ec2.SecurityGroup.fromSecurityGroupId(this, "internal-sg", cdk.Fn.importValue(process.env.CDK_MY_PREFIX + "internal-sg-id"));
+    const remoteAccessSg = ec2.SecurityGroup.fromSecurityGroupId(this, "remote-access-sg", cdk.Fn.importValue(process.env.CDK_MY_PREFIX + "remote-access-sg-id"));
 
     // EC2 Instance Parameters
     const uiType = process.env.CDK_MY_UI_TYPE || "cli";
     const instanceParams = this.node.tryGetContext(uiType);
+
+    // EC2 Key Pair
+    const keypair = new ec2.CfnKeyPair(this, 'CfnKeyPair', {
+        keyName: 'adds-key-pair',
+    })
+    keypair.applyRemovalPolicy(cdk.RemovalPolicy.DESTROY)
 
     // EC2 Instance
     const adds = new ec2.Instance(this, 'adds', {
@@ -31,17 +36,23 @@ export class ComputerStack extends cdk.Stack {
       instanceType: ec2.InstanceType.of(instanceParams.instanceClass, instanceParams.instanceSize),
       machineImage: new ec2.WindowsImage(instanceParams.windowsAmiVersion),
       securityGroup: addsSg,
-      role: props.addsRole
+      role: props.addsRole,
+      keyName: cdk.Token.asString(keypair.ref)
     });
     adds.addSecurityGroup(remoteAccessSg);
     adds.addSecurityGroup(internalSg);
 
-    new CfnOutput(this, "addsinstanceid", {
+    new cdk.CfnOutput(this, "addsinstanceid", {
       value: adds.instanceId,
       description: "ADDS Instance ID"
     });
 
-    this.addsPrivateIpAddress = new CfnOutput(this, "addsprivateipaddress", {
+
+    new cdk.CfnOutput(this, 'GetSSHKeyCommand', {
+      value: `aws ssm get-parameter --name /ec2/keypair/${keypair.getAtt('KeyPairId')} --region ${this.region} --with-decryption --query Parameter.Value --output text`,
+    })
+
+    this.addsPrivateIpAddress = new cdk.CfnOutput(this, "addsprivateipaddress", {
       exportName: process.env.CDK_MY_PREFIX + "addsprivateipaddress",
       value: adds.instancePrivateIp,
       description: "ADDS Instance Private IP Address"

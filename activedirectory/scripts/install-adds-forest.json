@@ -33,7 +33,7 @@
             "inputs": {
                 "runCommand": [
                     "$password = Get-SECSecretValue -SecretId {{ prefix }}AdminPassword",
-                    "$encrypted_password = ConvertTo-SecureString $password.SecureString -AsPlainText -Force",
+                    "$encrypted_password = ConvertTo-SecureString $password.SecretString -AsPlainText -Force",
                     "install-windowsfeature AD-Domain-Services,GPMC,RSAT-AD-PowerShell,RSAT-AD-AdminCenter,RSAT-ADDS-Tools,RSAT-DNS-Server",
                     "Import-Module ADDSDeployment",
                     "Install-ADDSForest -DomainName {{ domainName }} -DomainNetbiosName {{ domainNetBiosName }} -ForestMode {{ forestMode }} -DomainMode {{ domainMode }} -SafeModeAdministratorPassword $encrypted_password -DatabasePath \"C:\\Windows\\NTDS\" -LogPath \"C:\\Windows\\NTDS\" -SysvolPath \"C:\\Windows\\SYSVOL\" -InstallDns:$true -CreateDnsDelegation:$false -Force:$true "

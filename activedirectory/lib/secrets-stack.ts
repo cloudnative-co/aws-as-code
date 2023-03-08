@@ -1,11 +1,12 @@
-import cdk = require('@aws-cdk/core');
-import secretsmanager = require('@aws-cdk/aws-secretsmanager')
-import { ISecret } from '@aws-cdk/aws-secretsmanager';
+import * as cdk from 'aws-cdk-lib';
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
+
+import { Construct } from 'constructs';
 
 export class SecretStack extends cdk.Stack {
-  public readonly adminPassword: ISecret;
+  public readonly adminPassword: secretsmanager.ISecret;
 
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // Generate DSRM Password
