@@ -23,6 +23,15 @@ export class NetworkStack extends cdk.Stack {
       ]
     });
 
+    // DHCP OptionSet
+    const cfn_dhcp_option_set = new ec2.CfnDHCPOptions(this, "default-dhcp-options", {
+      domainNameServers: ['AmazonProvidedDNS']
+    });
+    const dhcp_vpc_assoc = new ec2.CfnVPCDHCPOptionsAssociation(this, "default-dhcp-vpc-assoc", {
+      dhcpOptionsId: cfn_dhcp_option_set.ref,
+      vpcId: this.vpc.vpcId
+    });
+
     // SecurityGroup
     const remoteAccessSg = new ec2.SecurityGroup(this, "remote-access-sg", {
       vpc: this.vpc,

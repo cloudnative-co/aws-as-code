@@ -8,7 +8,7 @@ import { ManagementStack } from '../lib/management-stack';
 import { IdentityStack } from '../lib/identity-stack';
 import { NetworkStack } from '../lib/network-stack';
 import { ComputerStack } from '../lib/computer-stack';
-// import { DhcpStack } from '../lib/dhcpoptionset-stack';
+import { DhcpStack } from '../lib/dhcpoptionset-stack';
 
 const myenv = {
     account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT,
@@ -27,8 +27,8 @@ const computerStack = new ComputerStack(app, myenv.prefix + 'ComputerStack', {
     addsRole: identityStack.addsRole,
     env: myenv
 });
-// new DhcpStack(app, myenv.prefix + 'DhcpStack', {
-//     vpc: networkStack.vpc,
-//     addsPrivateIpAddress: computerStack.addsPrivateIpAddress,
-//     env: myenv
-// });
+new DhcpStack(app, myenv.prefix + 'DhcpStack', {
+    vpc: networkStack.vpc,
+    addsPrivateIpAddress: computerStack.addsPrivateIpAddress,
+    env: myenv
+});
